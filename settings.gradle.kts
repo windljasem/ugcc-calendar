@@ -1,5 +1,3 @@
-rootProject.name = "ugcc-calendar"
-include(":app")
 pluginManagement {
     repositories {
         google()
