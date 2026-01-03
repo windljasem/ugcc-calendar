@@ -6,12 +6,12 @@
 
     <application
         android:allowBackup="true"
-        android:label="УГКЦ Календар"
-        android:theme="@style/Theme.Material3.DayNight">
+        android:label="УГКЦ Календар">
         
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
