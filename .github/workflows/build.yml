@@ -1,74 +1,29 @@
-package ua.ugcc.calendar
+name: Android Build
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import java.text.SimpleDateFormat
-import java.util.*
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    CalendarScreen()
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun CalendarScreen() {
-    val today = remember {
-        SimpleDateFormat("d MMMM yyyy", Locale("uk")).format(Date())
-    }
+jobs:
+  build:
+    runs-on: ubuntu-latest
     
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "УГКЦ Календар",
-            style = MaterialTheme.typography.headlineMedium
-        )
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
         
-        Spacer(modifier = Modifier.height(24.dp))
-        
-        Text(
-            text = today,
-            style = MaterialTheme.typography.titleLarge
-        )
-        
-        Spacer(modifier = Modifier.height(48.dp))
-        
-        Button(onClick = { /* TODO */ }) {
-            Text("📖 Духовне слово")
-        }
-    }
-}
-```
-
-4. **Commit changes**
-
----
-
-## Крок 7: Створюємо `.github/workflows/build.yml`
-
-1. **"Add file"** → **"Create new file"**
-2. Назва:
-```
-   .github/workflows/build.yml
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
+      
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
